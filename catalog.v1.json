@@ -1,7 +1,7 @@
 {
   "$schema": "https://apps.bridgething.com/schemas/catalog/v1.json",
   "schema": "catalog.v1",
-  "updated_at": "2026-09-13T02:52:08.731Z",
+  "updated_at": "2026-09-13T03:05:35.101Z",
   "repo": {
     "name": "Market Pulse",
     "description": "Crypto, DeFi sentiment, and U.S. Treasury yields on your Car Thing.",
@@ -23,6 +23,20 @@
       "homepage": "https://github.com/dharmapoudel/bridgething-market-pulse-source",
       "source": "https://github.com/dharmapoudel/bridgething-market-pulse-source",
       "versions": [
+        {
+          "version": "0.1.1",
+          "released_at": "2026-09-13T03:05:35.079Z",
+          "download": {
+            "url": "https://dharmapoudel.github.io/bridgething-market-pulse-source/r/01a0989a-d829-74f3-8463-5e44485c96fb/0.1.1.zip",
+            "size": 868786,
+            "sha256": "81af40f23f01341e01d6c4512a8d2f4d7887b912a0485a2389bb8c56879c6ee2"
+          },
+          "permissions": [
+            "net.proxy"
+          ],
+          "min_libbridgething_version": "0.12.1",
+          "changelog": "New icon: the classic orange Bitcoin coin (white ₿) on the dark Bridgething tile."
+        },
         {
           "version": "0.1.0",
           "released_at": "2026-09-13T02:52:08.727Z",
