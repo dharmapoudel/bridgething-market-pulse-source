@@ -1,5 +1,9 @@
 # Market Pulse
 
+## 0.1.2
+
+Full-bleed orange Bitcoin tile icon (white ₿, no coin circle)
+
 ## 0.1.1
 
 New icon: the classic orange Bitcoin coin (white ₿) on the dark Bridgething tile.

@@ -1,7 +1,7 @@
 {
   "id": "01a0989a-d829-74f3-8463-5e44485c96fb",
   "name": "Market Pulse",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Crypto prices, DeFi sentiment, and U.S. Treasury yields on your Car Thing.",
   "config": [],
   "permissions": [
