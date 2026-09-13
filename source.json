@@ -1,0 +1,8 @@
+{
+  "name": "Market Pulse",
+  "description": "Crypto, DeFi sentiment, and U.S. Treasury yields on your Car Thing.",
+  "homepage": "https://github.com/dharmapoudel/bridgething-market-pulse-source",
+  "icon": null,
+  "base_url": "https://dharmapoudel.github.io/bridgething-market-pulse-source",
+  "recommended_sources": []
+}
