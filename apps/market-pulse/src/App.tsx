@@ -24,7 +24,17 @@ const VIEWS: { id: View; label: string; key: string }[] = [
   { id: 'yields', label: 'Yields', key: '3' },
 ];
 
-function Sparkline({ data, w = 132, h = 40 }: { data: number[]; w?: number; h?: number }) {
+function Sparkline({
+  data,
+  w = 132,
+  h = 40,
+  className = '',
+}: {
+  data: number[];
+  w?: number;
+  h?: number;
+  className?: string;
+}) {
   if (data.length < 2) return <div style={{ width: w, height: h }} />;
   const min = Math.min(...data);
   const max = Math.max(...data);
@@ -35,7 +45,7 @@ function Sparkline({ data, w = 132, h = 40 }: { data: number[]; w?: number; h?: 
     .join(' ');
   const color = up ? '#3ddc84' : '#dc3d3d';
   return (
-    <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} aria-hidden>
+    <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} aria-hidden className={className}>
       <polyline points={pts} fill="none" stroke={color} strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" />
     </svg>
   );
@@ -76,21 +86,21 @@ function CryptoView({ section, onRetry }: { section: Section<Coin[]>; onRetry: (
     );
   }
   return (
-    <div data-knob-scroll className="h-full overflow-y-hidden px-6">
+    <div data-knob-scroll className="h-full overflow-y-hidden px-6 portrait:px-4">
       {section.data.map(c => (
-        <div key={c.id} className="flex items-center gap-5 border-b border-rule px-1 py-2 last:border-0">
-          <div className="w-24 shrink-0">
+        <div key={c.id} className="flex items-center gap-5 border-b border-rule px-1 py-2 last:border-0 portrait:gap-3">
+          <div className="w-24 shrink-0 portrait:w-20">
             <div className="font-display text-row-lg font-bold tracking-tight-1">{c.symbol}</div>
             <div className="truncate font-mono text-hint text-dim">{c.name}</div>
           </div>
           <div className="shrink-0 opacity-90">
-            <Sparkline data={c.spark} />
+            <Sparkline data={c.spark} className="portrait:h-9 portrait:w-24" />
           </div>
           <div className="flex-1" />
-          <div className="text-right">
+          <div className="text-right portrait:shrink-0">
             <div className="font-display text-title font-semibold tabular-nums tracking-tight-1">{fmtPrice(c.price)}</div>
           </div>
-          <div className="w-24 shrink-0 text-right">
+          <div className="w-24 shrink-0 text-right portrait:w-20">
             <ChangePill value={c.change24h} />
           </div>
         </div>
@@ -155,7 +165,7 @@ function SentimentView({ section, onRetry }: { section: Section<SentimentDay[]>;
   const history = days.slice(0, 7);
   const color = gaugeColor(now.value);
   return (
-    <div className="flex h-full items-center gap-8 px-8">
+    <div className="flex h-full items-center gap-8 px-8 portrait:flex-col portrait:justify-center portrait:gap-4 portrait:px-4">
       <div className="flex w-80 shrink-0 flex-col items-center">
         <Gauge value={now.value} />
         <div className="text-center">
@@ -167,7 +177,7 @@ function SentimentView({ section, onRetry }: { section: Section<SentimentDay[]>;
           </div>
         </div>
       </div>
-      <div className="flex-1">
+      <div className="flex-1 portrait:w-full portrait:flex-none">
         <div className="mb-3 font-mono text-eyebrow uppercase tracking-[0.2em] text-dim">fear &amp; greed · 7 days</div>
         <div className="flex items-end gap-3" style={{ height: 170 }}>
           {history.map((d, i) => (
@@ -211,8 +221,8 @@ function YieldsView({ section, onRetry }: { section: Section<YieldCurve>; onRetr
   const yOf = (v: number) => h - 14 - ((v - min) / span) * (h - 28);
   const pts = curve.tenors.map((t, i) => `${((i / (curve.tenors.length - 1)) * w).toFixed(1)},${yOf(t.value).toFixed(1)}`).join(' ');
   return (
-    <div className="flex h-full items-center gap-8 px-8">
-      <div className="w-64 shrink-0">
+    <div className="flex h-full items-center gap-8 px-8 portrait:flex-col portrait:items-stretch portrait:justify-center portrait:gap-3 portrait:px-4">
+      <div className="w-64 shrink-0 portrait:w-auto">
         <div className="font-mono text-eyebrow uppercase tracking-[0.2em] text-dim">us 10-year</div>
         <div className="font-display text-screen-title font-bold tabular-nums tracking-tight-1">
           {ten.value.toFixed(2)}
@@ -223,7 +233,7 @@ function YieldsView({ section, onRetry }: { section: Section<YieldCurve>; onRetr
         </div>
         <div className="mt-4 font-mono text-hint text-dim">as of {curve.date}</div>
       </div>
-      <div className="flex-1">
+      <div className="flex-1 portrait:w-full portrait:flex-none">
         <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} aria-hidden className="w-full">
           <polyline points={pts} fill="none" stroke="#00a8e8" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />
           {curve.tenors.map((t, i) => {
@@ -238,7 +248,7 @@ function YieldsView({ section, onRetry }: { section: Section<YieldCurve>; onRetr
             );
           })}
         </svg>
-        <div className="mt-3 grid grid-cols-4 gap-3">
+        <div className="mt-3 grid grid-cols-4 gap-3 portrait:mt-2 portrait:gap-2">
           {rest.map(t => (
             <div key={t.label} className="border border-rule px-3 py-2">
               <div className="font-mono text-hint text-dim">{t.label}</div>
@@ -297,17 +307,17 @@ export default function App() {
 
   return (
     <div className="flex h-full w-full flex-col bg-bg text-off-white">
-      <header className="flex h-14 shrink-0 items-center gap-6 border-b border-rule px-6">
-        <div className="flex items-center gap-2">
+      <header className="flex h-14 shrink-0 items-center gap-6 border-b border-rule px-6 portrait:h-auto portrait:flex-wrap portrait:gap-x-4 portrait:gap-y-2 portrait:px-4 portrait:py-3">
+        <div className="flex items-center gap-2 portrait:order-1">
           <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-ok" />
           <span className="font-mono text-eyebrow font-semibold uppercase tracking-[0.25em] text-near">Market Pulse</span>
         </div>
-        <nav className="flex gap-2">
+        <nav className="flex gap-2 portrait:order-3 portrait:w-full">
           {VIEWS.map(v => (
             <button
               key={v.id}
               onClick={() => setView(v.id)}
-              className={`min-w-28 px-4 py-2 font-mono text-row font-semibold transition ${
+              className={`min-w-28 px-4 py-2 font-mono text-row font-semibold transition portrait:min-w-0 portrait:flex-1 portrait:px-2 ${
                 view === v.id ? 'bg-accent-soft text-accent' : 'text-dim active:bg-neutral-soft'
               }`}>
               <span className="mr-2 text-hint text-dim">{v.key}</span>
@@ -315,8 +325,10 @@ export default function App() {
             </button>
           ))}
         </nav>
-        <div className="flex-1" />
-        <UpdatedLine section={sectionFor(view)} onRetry={refresh} />
+        <div className="flex-1 portrait:hidden" />
+        <div className="contents portrait:order-2 portrait:ml-auto portrait:block">
+          <UpdatedLine section={sectionFor(view)} onRetry={refresh} />
+        </div>
       </header>
 
       <main className="min-h-0 flex-1">
@@ -325,7 +337,7 @@ export default function App() {
         {view === 'yields' && <YieldsView section={yields} onRetry={refresh} />}
       </main>
 
-      <footer className="flex h-10 shrink-0 items-center justify-between border-t border-rule px-6 font-mono text-hint text-dim">
+      <footer className="flex h-10 shrink-0 items-center justify-between border-t border-rule px-6 font-mono text-hint text-dim portrait:gap-4 portrait:px-4">
         <span>knob scroll · 1 crypto · 2 sentiment · 3 yields</span>
         <span>esc back</span>
       </footer>
