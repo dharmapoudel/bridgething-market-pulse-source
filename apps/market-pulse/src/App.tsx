@@ -63,6 +63,68 @@ function ChangePill({ value }: { value: number }) {
   );
 }
 
+// portrait (480x800) row style, modeled on the user's reference screenshot:
+// circular coin icon, bold name + dimmed symbol, price with ▲/▼ change line,
+// thin divider, subtle chevron. landscape rows are untouched.
+const COIN_COLORS: Record<string, string> = {
+  bitcoin: '#f7931a',
+  ethereum: '#627eea',
+  solana: '#9945ff',
+  binancecoin: '#f0b90b',
+  ripple: '#5b7fa6',
+  dogecoin: '#c2a633',
+};
+
+function CoinIcon({ coin }: { coin: Coin }) {
+  const bg = COIN_COLORS[coin.id] ?? '#4b5563';
+  const glyph = (coin.symbol || '?').charAt(0);
+  return (
+    <div
+      aria-hidden
+      className="grid h-14 w-14 shrink-0 place-items-center rounded-full font-display text-title font-bold text-white"
+      style={{ backgroundColor: bg }}>
+      {glyph}
+    </div>
+  );
+}
+
+function fmtDollarDelta(c: Coin): string {
+  const d = (c.price * c.change24h) / 100;
+  const abs = Math.abs(d);
+  const opts: Intl.NumberFormatOptions =
+    abs >= 100 ? { maximumFractionDigits: 0 } : { minimumFractionDigits: 2, maximumFractionDigits: 2 };
+  return `${d >= 0 ? '+' : '-'}$${abs.toLocaleString('en-US', opts)}`;
+}
+
+function CryptoRowPortrait({ c }: { c: Coin }) {
+  const up = c.change24h >= 0;
+  return (
+    <div className="hidden items-center gap-4 px-2 py-4 portrait:flex">
+      <CoinIcon coin={c} />
+      <div className="min-w-0 flex-1">
+        <div className="truncate font-display text-row-lg font-bold text-off-white">{c.name}</div>
+        <div className="font-mono text-hint text-dim">{c.symbol}</div>
+      </div>
+      <div className="shrink-0 text-right">
+        <div className="font-display text-title font-bold tabular-nums text-off-white">{fmtPrice(c.price)}</div>
+        <div className={`mt-0.5 font-mono text-hint font-semibold tabular-nums ${up ? 'text-ok' : 'text-err'}`}>
+          {fmtDollarDelta(c)} {up ? '▲' : '▼'} {Math.abs(c.change24h).toFixed(2)}%
+        </div>
+      </div>
+      <svg width="10" height="16" viewBox="0 0 10 16" aria-hidden className="shrink-0 text-dim">
+        <path
+          d="M1.5 1.5 8 8l-6.5 6.5"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    </div>
+  );
+}
+
 function UpdatedLine({ section, onRetry }: { section: Section<unknown>; onRetry: () => void }) {
   if (section.loading && !section.data) {
     return <span className="animate-pulse font-mono text-hint text-dim">updating…</span>;
@@ -88,21 +150,26 @@ function CryptoView({ section, onRetry }: { section: Section<Coin[]>; onRetry: (
   return (
     <div data-knob-scroll className="h-full overflow-y-hidden px-6 portrait:px-4">
       {section.data.map(c => (
-        <div key={c.id} className="flex items-center gap-5 border-b border-rule px-1 py-2 last:border-0 portrait:gap-3">
-          <div className="w-24 shrink-0 portrait:w-20">
-            <div className="font-display text-row-lg font-bold tracking-tight-1">{c.symbol}</div>
-            <div className="truncate font-mono text-hint text-dim">{c.name}</div>
+        <div key={c.id} className="border-b border-rule last:border-0">
+          <div className="flex items-center gap-5 px-1 py-2 portrait:hidden">
+            <div className="w-24 shrink-0">
+              <div className="font-display text-row-lg font-bold tracking-tight-1">{c.symbol}</div>
+              <div className="truncate font-mono text-hint text-dim">{c.name}</div>
+            </div>
+            <div className="shrink-0 opacity-90">
+              <Sparkline data={c.spark} />
+            </div>
+            <div className="flex-1" />
+            <div className="text-right">
+              <div className="font-display text-title font-semibold tabular-nums tracking-tight-1">
+                {fmtPrice(c.price)}
+              </div>
+            </div>
+            <div className="w-24 shrink-0 text-right">
+              <ChangePill value={c.change24h} />
+            </div>
           </div>
-          <div className="shrink-0 opacity-90">
-            <Sparkline data={c.spark} className="portrait:h-9 portrait:w-24" />
-          </div>
-          <div className="flex-1" />
-          <div className="text-right portrait:shrink-0">
-            <div className="font-display text-title font-semibold tabular-nums tracking-tight-1">{fmtPrice(c.price)}</div>
-          </div>
-          <div className="w-24 shrink-0 text-right portrait:w-20">
-            <ChangePill value={c.change24h} />
-          </div>
+          <CryptoRowPortrait c={c} />
         </div>
       ))}
     </div>
