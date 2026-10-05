@@ -1,5 +1,9 @@
 # Market Pulse
 
+## 0.1.5
+
+Portrait work from 0.1.3/0.1.4, consolidated: the app reflows for portrait (480x800) -- two-row header with full-width section tabs, crypto rows fit without clipping, and the sentiment gauge and yield curve stack vertically. Portrait crypto rows are restyled like the reference: circular colored coin icons, bold name with dimmed symbol, price with a green/red ▲/▼ dollar-and-percent change line, thin dividers, and a subtle chevron -- no sparklines in portrait. Landscape (800x480) is unchanged. Comment cleanup only; no behavior changes since 0.1.4.
+
 ## 0.1.4
 
 Portrait crypto rows restyled like the reference: circular colored coin icons, bold name with dimmed symbol, price with a green/red ▲/▼ dollar-and-percent change line, thin dividers, and a subtle chevron. No more sparklines in portrait. Landscape (800x480) is unchanged.
